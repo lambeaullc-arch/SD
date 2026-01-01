@@ -74,6 +74,11 @@ class SamplePack(BaseModel):
     tags: List[str] = []
     price: float  # 0.0 for free packs
     is_free: bool = False
+    is_featured: bool = False  # Featured on homepage
+    is_sync_ready: bool = False  # Broadcast-quality loops
+    sync_type: Optional[str] = None  # Sports, Film, Cinematic, Broadcast
+    bpm: Optional[int] = None  # Tempo
+    key: Optional[str] = None  # Musical key
     creator_id: str
     creator_name: str
     audio_file_path: str
