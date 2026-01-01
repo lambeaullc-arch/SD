@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { authAPI } from '../../utils/api';
+import { authAPI, subscriptionAPI } from '../../utils/api';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -28,12 +28,30 @@ const AuthCallback = () => {
         console.log('Auth callback user:', user);
         console.log('User role:', user.role);
 
+        // Check if user selected subscription during registration
+        const registrationType = localStorage.getItem('registration_type');
+        
         // Redirect admin users to admin dashboard
         if (user.role === 'admin') {
           console.log('Redirecting to admin dashboard');
+          localStorage.removeItem('registration_type');
           navigate('/admin-dashboard', { replace: true });
+        } else if (registrationType === 'subscription') {
+          // User chose subscription - redirect to subscription checkout
+          console.log('Redirecting to subscription checkout');
+          localStorage.removeItem('registration_type');
+          try {
+            const subResponse = await subscriptionAPI.createCheckout(window.location.origin);
+            window.location.href = subResponse.data.url;
+          } catch (error) {
+            console.error('Subscription checkout failed:', error);
+            // Fallback to browse if checkout fails
+            navigate('/browse', { state: { user }, replace: true });
+          }
         } else {
+          // Regular user or free registration
           console.log('Redirecting to browse');
+          localStorage.removeItem('registration_type');
           navigate('/browse', { state: { user }, replace: true });
         }
       } catch (error) {
