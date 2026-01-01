@@ -23,8 +23,14 @@ const AdminDashboard = () => {
     price: '',
     creatorEmail: '',
     isFree: false,
+    isFeatured: false,
+    isSyncReady: false,
+    syncType: '',
+    bpm: '',
+    key: '',
     audioFile: null
   });
+  const [editingPack, setEditingPack] = useState(null);
 
   useEffect(() => {
     checkAdmin();
