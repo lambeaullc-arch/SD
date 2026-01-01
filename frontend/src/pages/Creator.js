@@ -341,17 +341,51 @@ const Creator = () => {
               </div>
               
               <div className="mb-4">
-                <label className="block text-sm font-semibold mb-2">Audio File or ZIP Archive</label>
+                <label className="block text-sm font-semibold mb-2">Audio File or ZIP Archive <span className="text-red-400">*</span></label>
                 <input
                   type="file"
                   accept="audio/*,.zip"
-                  onChange={(e) => setUploadForm({ ...uploadForm, audioFile: e.target.files[0] })}
+                  onChange={(e) => setUploadForm({ ...uploadForm, audioFile: e.target.files[0], previewAudio: null })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet-500"
                   required
                   data-testid="upload-audio-input"
                 />
                 <p className="text-sm text-gray-400 mt-2">Supports MP3, WAV, and ZIP files</p>
               </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-semibold mb-2">Cover Image <span className="text-red-400">*</span></label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setUploadForm({ ...uploadForm, coverImage: e.target.files[0] })}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet-500"
+                  required
+                  data-testid="upload-cover-input"
+                />
+                <p className="text-sm text-gray-400 mt-2">Square image recommended (JPG, PNG, WebP)</p>
+              </div>
+              
+              {/* Preview Audio - shows when ZIP is selected */}
+              {uploadForm.audioFile?.name?.toLowerCase().endsWith('.zip') && (
+                <div className="mb-4 p-4 border-2 border-yellow-500/30 rounded-lg bg-yellow-500/5">
+                  <label className="block text-sm font-semibold mb-2">
+                    Preview Audio <span className="text-red-400">*</span>
+                    <span className="text-yellow-400 ml-2">(Required for ZIP files)</span>
+                  </label>
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    onChange={(e) => setUploadForm({ ...uploadForm, previewAudio: e.target.files[0] })}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet-500"
+                    required
+                    data-testid="upload-preview-input"
+                  />
+                  <p className="text-sm text-yellow-400/80 mt-2">
+                    Provide a single audio file for preview on the website.
+                  </p>
+                </div>
+              )}
               
               <div className="flex gap-3">
                 <button type="submit" className="flex-1 btn-primary" data-testid="submit-upload-button">
