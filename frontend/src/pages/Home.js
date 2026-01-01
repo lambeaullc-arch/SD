@@ -289,31 +289,69 @@ const Home = () => {
 
               {featuredPacks.length > 0 ? (
                 <div className="space-y-4">
-                  {featuredPacks.map(pack => (
-                    <div key={pack.pack_id} className="glass-panel-hover p-4">
-                      <div className="flex gap-4">
-                        <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-3xl flex-shrink-0">
-                          🎵
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="inline-block px-2 py-1 bg-gradient-to-r from-violet-500 to-purple-600 rounded text-xs font-bold mb-1">
-                            FEATURED
-                          </span>
-                          <h3 className="font-bold text-lg mb-1 truncate">{pack.title}</h3>
-                          <p className="text-sm text-gray-400 mb-2">by {pack.creator_name}</p>
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.category}</span>
-                            {pack.bpm && <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.bpm} BPM</span>}
-                            {pack.is_free ? (
-                              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-bold">FREE</span>
+                  {featuredPacks.map(pack => {
+                    const previewUrl = getPreviewUrl(pack);
+                    const coverUrl = getCoverUrl(pack);
+                    return (
+                      <div key={pack.pack_id} className="glass-panel-hover p-4">
+                        <div className="flex gap-4">
+                          {/* Cover Image with Play Button */}
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 group">
+                            {coverUrl ? (
+                              <img 
+                                src={coverUrl} 
+                                alt={pack.title}
+                                className="w-full h-full object-cover"
+                              />
                             ) : (
-                              <span className="px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-bold">${pack.price}</span>
+                              <div className="w-full h-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-3xl">
+                                🎵
+                              </div>
                             )}
+                            {/* Play Button Overlay */}
+                            {previewUrl && (
+                              <button
+                                onClick={() => togglePlay(pack.pack_id, previewUrl)}
+                                className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition"
+                                data-testid={`play-btn-${pack.pack_id}`}
+                              >
+                                {playingPack === pack.pack_id ? (
+                                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                                  </svg>
+                                ) : (
+                                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                  </svg>
+                                )}
+                              </button>
+                            )}
+                            {playingPack === pack.pack_id && (
+                              <div className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="inline-block px-2 py-1 bg-gradient-to-r from-violet-500 to-purple-600 rounded text-xs font-bold mb-1">
+                              FEATURED
+                            </span>
+                            <Link to={`/pack/${pack.pack_id}`}>
+                              <h3 className="font-bold text-lg mb-1 truncate hover:text-violet-400 transition">{pack.title}</h3>
+                            </Link>
+                            <p className="text-sm text-gray-400 mb-2">by {pack.creator_name}</p>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.category}</span>
+                              {pack.bpm && <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.bpm} BPM</span>}
+                              {pack.is_free ? (
+                                <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-bold">FREE</span>
+                              ) : (
+                                <span className="px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-bold">${pack.price}</span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="glass-panel p-8 text-center">
