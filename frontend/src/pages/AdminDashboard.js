@@ -98,6 +98,17 @@ const AdminDashboard = () => {
       formData.append('price', uploadForm.price);
       formData.append('creator_email', uploadForm.creatorEmail);
       formData.append('is_free', uploadForm.isFree);
+      formData.append('is_featured', uploadForm.isFeatured);
+      formData.append('is_sync_ready', uploadForm.isSyncReady);
+      if (uploadForm.isSyncReady && uploadForm.syncType) {
+        formData.append('sync_type', uploadForm.syncType);
+      }
+      if (uploadForm.bpm) {
+        formData.append('bpm', uploadForm.bpm);
+      }
+      if (uploadForm.key) {
+        formData.append('key', uploadForm.key);
+      }
       formData.append('audio_file', uploadForm.audioFile);
 
       await adminAPI.uploadPack(formData);
@@ -110,6 +121,11 @@ const AdminDashboard = () => {
         price: '',
         creatorEmail: '',
         isFree: false,
+        isFeatured: false,
+        isSyncReady: false,
+        syncType: '',
+        bpm: '',
+        key: '',
         audioFile: null
       });
       fetchAllData();
