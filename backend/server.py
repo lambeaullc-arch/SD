@@ -1224,6 +1224,130 @@ async def update_pack_metadata(
     
     return {"message": "Pack metadata updated"}
 
+@api_router.put("/admin/packs/{pack_id}")
+async def admin_update_pack(
+    pack_id: str,
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    category: Optional[str] = Form(None),
+    tags: Optional[str] = Form(None),
+    price: Optional[float] = Form(None),
+    bpm: Optional[int] = Form(None),
+    key: Optional[str] = Form(None),
+    is_free: Optional[bool] = Form(None),
+    is_featured: Optional[bool] = Form(None),
+    is_sync_ready: Optional[bool] = Form(None),
+    sync_type: Optional[str] = Form(None),
+    request: Request = None,
+    session_token: Optional[str] = Cookie(None)
+):
+    """Admin update pack - edit any field after upload"""
+    admin = await require_role(request, "admin", session_token)
+    
+    # Check if pack exists
+    pack = await db.sample_packs.find_one({"pack_id": pack_id}, {"_id": 0})
+    if not pack:
+        raise HTTPException(status_code=404, detail="Pack not found")
+    
+    # Build update data with only provided fields
+    update_data = {}
+    if title is not None:
+        update_data["title"] = title
+    if description is not None:
+        update_data["description"] = description
+    if category is not None:
+        update_data["category"] = category
+    if tags is not None:
+        update_data["tags"] = [t.strip() for t in tags.split(",") if t.strip()]
+    if price is not None:
+        update_data["price"] = price
+        update_data["is_free"] = price == 0
+    if bpm is not None:
+        update_data["bpm"] = bpm
+    if key is not None:
+        update_data["key"] = key
+    if is_free is not None:
+        update_data["is_free"] = is_free
+        if is_free:
+            update_data["price"] = 0.0
+    if is_featured is not None:
+        update_data["is_featured"] = is_featured
+    if is_sync_ready is not None:
+        update_data["is_sync_ready"] = is_sync_ready
+        if not is_sync_ready:
+            update_data["sync_type"] = None
+    if sync_type is not None:
+        update_data["sync_type"] = sync_type
+    
+    if update_data:
+        await db.sample_packs.update_one(
+            {"pack_id": pack_id},
+            {"$set": update_data}
+        )
+    
+    # Return updated pack
+    updated_pack = await db.sample_packs.find_one({"pack_id": pack_id}, {"_id": 0})
+    return updated_pack
+
+@api_router.get("/admin/packs")
+async def admin_list_packs(
+    request: Request,
+    session_token: Optional[str] = Cookie(None),
+    skip: int = 0,
+    limit: int = 100
+):
+    """Admin list all packs"""
+    admin = await require_role(request, "admin", session_token)
+    
+    packs = await db.sample_packs.find({}, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+    return packs
+
+@api_router.delete("/admin/packs/{pack_id}")
+async def admin_delete_pack(
+    pack_id: str,
+    request: Request,
+    session_token: Optional[str] = Cookie(None)
+):
+    """Admin delete a pack"""
+    admin = await require_role(request, "admin", session_token)
+    
+    # Check if pack exists
+    pack = await db.sample_packs.find_one({"pack_id": pack_id}, {"_id": 0})
+    if not pack:
+        raise HTTPException(status_code=404, detail="Pack not found")
+    
+    # Delete the file
+    file_path = ROOT_DIR / pack["audio_file_path"]
+    if file_path.exists():
+        os.remove(file_path)
+    
+    # Delete from database
+    await db.sample_packs.delete_one({"pack_id": pack_id})
+    
+    return {"message": "Pack deleted successfully"}
+
+@api_router.post("/admin/users/{user_id}/promote")
+async def promote_user_to_creator(
+    user_id: str,
+    request: Request,
+    session_token: Optional[str] = Cookie(None)
+):
+    """Promote a user to creator role"""
+    admin = await require_role(request, "admin", session_token)
+    
+    # Check if user exists
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Update user role
+    await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {"role": "creator", "creator_approved": True}}
+    )
+    
+    return {"message": f"User {user['email']} promoted to creator"}
+
 @api_router.get("/admin/stats")
 async def get_admin_stats(request: Request, session_token: Optional[str] = Cookie(None)):
     """Get platform statistics"""
