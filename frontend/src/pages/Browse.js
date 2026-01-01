@@ -17,6 +17,7 @@ const Browse = () => {
   useEffect(() => {
     fetchSamples();
     fetchSubscription();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, search]);
 
   const fetchSamples = async () => {
