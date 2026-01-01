@@ -357,6 +357,108 @@ const AdminDashboard = () => {
           </div>
         )}
 
+        {/* EMAIL COLLECTION TAB */}
+        {activeTab === 'emails' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold" style={{ fontFamily: 'Unbounded, sans-serif' }}>
+                Email Collection
+              </h2>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    const emails = allUsers.map(u => u.email).join(', ');
+                    navigator.clipboard.writeText(emails);
+                    alert('Emails copied to clipboard!');
+                  }}
+                  className="btn-secondary"
+                  data-testid="copy-emails-button"
+                >
+                  📋 Copy All Emails
+                </button>
+                <button
+                  onClick={() => {
+                    const csv = 'Email,Name,Role,Joined\n' + allUsers.map(u => 
+                      `${u.email},${u.name},${u.role},${new Date(u.created_at).toLocaleDateString()}`
+                    ).join('\n');
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'sounddrops-users.csv';
+                    a.click();
+                  }}
+                  className="btn-primary"
+                  data-testid="export-csv-button"
+                >
+                  📥 Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="glass-panel p-6">
+                <p className="text-gray-400 text-sm mb-2">Total Registered</p>
+                <p className="text-4xl font-bold text-white">{allUsers.length}</p>
+              </div>
+              <div className="glass-panel p-6">
+                <p className="text-gray-400 text-sm mb-2">Free Users</p>
+                <p className="text-4xl font-bold text-blue-400">{allUsers.filter(u => u.role === 'user').length}</p>
+              </div>
+              <div className="glass-panel p-6">
+                <p className="text-gray-400 text-sm mb-2">Creators</p>
+                <p className="text-4xl font-bold text-violet-400">{allUsers.filter(u => u.role === 'creator' || u.role === 'admin').length}</p>
+              </div>
+            </div>
+
+            <div className="glass-panel p-6">
+              <h3 className="text-xl font-bold mb-4">All Registered Users</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="text-left py-3 px-4 text-gray-400 font-semibold">Email</th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-semibold">Name</th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-semibold">Role</th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-semibold">Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allUsers.map(user => (
+                      <tr key={user.user_id} className="border-b border-white/5 hover:bg-white/5" data-testid="user-row">
+                        <td className="py-3 px-4 font-mono text-sm">{user.email}</td>
+                        <td className="py-3 px-4">{user.name}</td>
+                        <td className="py-3 px-4">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            user.role === 'admin' ? 'bg-red-500/20 text-red-400' :
+                            user.role === 'creator' ? 'bg-violet-500/20 text-violet-400' :
+                            'bg-blue-500/20 text-blue-400'
+                          }`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-sm text-gray-400">
+                          {new Date(user.created_at).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="glass-panel p-6">
+              <h3 className="text-xl font-bold mb-4">💡 Email Marketing Tips</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>• Export CSV and import to your email marketing platform (Mailchimp, ConvertKit, etc.)</li>
+                <li>• Send updates about new sample packs and features</li>
+                <li>• Announce special promotions and creator spotlights</li>
+                <li>• Share production tips and tutorials</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
         {/* UPLOAD PACK TAB */}
         {activeTab === 'upload' && (
           <div className="space-y-6 max-w-3xl">
