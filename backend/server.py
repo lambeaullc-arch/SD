@@ -487,16 +487,25 @@ async def download_sample(
         {"$inc": {"download_count": 1}}
     )
     
-    # Return audio file
+    # Return file
     file_path = ROOT_DIR / pack["audio_file_path"]
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Audio file not found")
+        raise HTTPException(status_code=404, detail="File not found")
     
-    return FileResponse(
-        path=file_path,
-        filename=f"{pack['title']}.mp3",
-        media_type="audio/mpeg"
-    )
+    # Determine media type based on file type
+    file_type = pack.get("file_type", "audio")
+    if file_type == "zip":
+        return FileResponse(
+            path=file_path,
+            filename=f"{pack['title']}.zip",
+            media_type="application/zip"
+        )
+    else:
+        return FileResponse(
+            path=file_path,
+            filename=f"{pack['title']}.mp3",
+            media_type="audio/mpeg"
+        )
 
 # ============================================
 # PURCHASES & SUBSCRIPTIONS
