@@ -348,9 +348,9 @@ const AdminDashboard = () => {
       <div className="glass-panel m-4">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-              <span className="text-2xl">🛠️</span>
-            </div>
+            <Link to="/" className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center hover:scale-105 transition">
+              <span className="text-2xl">🎵</span>
+            </Link>
             <div>
               <h1 className="text-2xl font-bold" style={{ fontFamily: 'Unbounded, sans-serif' }}>
                 Admin Dashboard
@@ -360,7 +360,45 @@ const AdminDashboard = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            <div className="text-right">
+            {/* Navigation Menu */}
+            <div className="relative">
+              <button 
+                onClick={() => setShowNav(!showNav)}
+                className="btn-secondary flex items-center gap-2"
+                data-testid="nav-menu-btn"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                Menu
+              </button>
+              
+              {showNav && (
+                <div className="absolute right-0 mt-2 w-48 glass-panel rounded-lg shadow-xl z-50 overflow-hidden" data-testid="nav-dropdown">
+                  <Link to="/" className="block px-4 py-3 hover:bg-white/10 transition" onClick={() => setShowNav(false)}>
+                    🏠 Home
+                  </Link>
+                  <Link to="/browse" className="block px-4 py-3 hover:bg-white/10 transition" onClick={() => setShowNav(false)}>
+                    🎧 Browse
+                  </Link>
+                  <Link to="/sync" className="block px-4 py-3 hover:bg-white/10 transition" onClick={() => setShowNav(false)}>
+                    🎬 Sync Ready
+                  </Link>
+                  <Link to="/creator" className="block px-4 py-3 hover:bg-white/10 transition" onClick={() => setShowNav(false)}>
+                    🎨 Creator Dashboard
+                  </Link>
+                  <div className="border-t border-white/10"></div>
+                  <Link to="/favorites" className="block px-4 py-3 hover:bg-white/10 transition" onClick={() => setShowNav(false)}>
+                    ❤️ Favorites
+                  </Link>
+                  <Link to="/collections" className="block px-4 py-3 hover:bg-white/10 transition" onClick={() => setShowNav(false)}>
+                    📁 Collections
+                  </Link>
+                </div>
+              )}
+            </div>
+            
+            <div className="text-right hidden md:block">
               <p className="text-sm text-gray-400">Logged in as</p>
               <p className="font-semibold">{user?.email}</p>
             </div>
