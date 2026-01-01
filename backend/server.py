@@ -1291,7 +1291,7 @@ async def invite_creator(
     
     await db.creator_invitations.insert_one(invitation_doc)
     
-    return {"message": "Creator invitation sent", "invitation": invitation_doc}
+    return {"message": "Creator invitation sent", "invitation": serialize_doc(invitation_doc)}
 
 @api_router.get("/admin/invitations")
 async def list_invitations(request: Request, session_token: Optional[str] = Cookie(None)):
