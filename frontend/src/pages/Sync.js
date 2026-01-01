@@ -13,6 +13,7 @@ const Sync = () => {
 
   useEffect(() => {
     fetchSyncPacks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncType]);
 
   const fetchSyncPacks = async () => {
