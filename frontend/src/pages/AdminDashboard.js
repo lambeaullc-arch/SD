@@ -12,6 +12,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [creators, setCreators] = useState([]);
   const [allSamples, setAllSamples] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [uploadForm, setUploadForm] = useState({
     title: '',
     description: '',
