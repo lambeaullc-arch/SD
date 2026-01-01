@@ -54,16 +54,18 @@ const AdminDashboard = () => {
 
   const fetchAllData = async () => {
     try {
-      const [statsRes, creatorsRes, samplesRes, usersRes] = await Promise.all([
+      const [statsRes, creatorsRes, samplesRes, usersRes, invitationsRes] = await Promise.all([
         adminAPI.getStats(),
         adminAPI.listCreators(),
         samplesAPI.list({}),
-        adminAPI.getAllUsers()
+        adminAPI.getAllUsers(),
+        adminAPI.listInvitations()
       ]);
       setStats(statsRes.data);
       setCreators(creatorsRes.data);
       setAllSamples(samplesRes.data);
       setAllUsers(usersRes.data);
+      setInvitations(invitationsRes.data);
     } catch (error) {
       console.error('Failed to fetch data:', error);
     }
