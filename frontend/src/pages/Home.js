@@ -231,6 +231,114 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Featured Sections Side by Side */}
+      <div className="py-24 px-4">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid md:grid-cols-2 gap-8">
+            
+            {/* Featured Packs */}
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-3xl font-bold mb-2" style={{ fontFamily: 'Unbounded, sans-serif' }}>
+                    ⭐ Featured Packs
+                  </h2>
+                  <p className="text-gray-400">Hand-picked by our team</p>
+                </div>
+                <Link to="/browse?featured=true" className="text-violet-400 hover:text-violet-300 font-semibold">
+                  View All →
+                </Link>
+              </div>
+
+              {featuredPacks.length > 0 ? (
+                <div className="space-y-4">
+                  {featuredPacks.map(pack => (
+                    <div key={pack.pack_id} className="glass-panel-hover p-4">
+                      <div className="flex gap-4">
+                        <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-3xl flex-shrink-0">
+                          🎵
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="inline-block px-2 py-1 bg-gradient-to-r from-violet-500 to-purple-600 rounded text-xs font-bold mb-1">
+                            FEATURED
+                          </span>
+                          <h3 className="font-bold text-lg mb-1 truncate">{pack.title}</h3>
+                          <p className="text-sm text-gray-400 mb-2">by {pack.creator_name}</p>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.category}</span>
+                            {pack.bpm && <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.bpm} BPM</span>}
+                            {pack.is_free ? (
+                              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-bold">FREE</span>
+                            ) : (
+                              <span className="px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-bold">${pack.price}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="glass-panel p-8 text-center">
+                  <p className="text-gray-400">No featured packs yet</p>
+                </div>
+              )}
+            </div>
+
+            {/* Sync-Ready Loops */}
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-3xl font-bold mb-2" style={{ fontFamily: 'Unbounded, sans-serif' }}>
+                    🎬 Sync-Ready Loops
+                  </h2>
+                  <p className="text-gray-400">Broadcast quality for film & TV</p>
+                </div>
+                <Link to="/sync" className="text-violet-400 hover:text-violet-300 font-semibold">
+                  View All →
+                </Link>
+              </div>
+
+              {syncPacks.length > 0 ? (
+                <div className="space-y-4">
+                  {syncPacks.map(pack => (
+                    <div key={pack.pack_id} className="glass-panel-hover p-4">
+                      <div className="flex gap-4">
+                        <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-3xl flex-shrink-0">
+                          🎬
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="inline-block px-2 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded text-xs font-bold mb-1">
+                            SYNC READY
+                          </span>
+                          <h3 className="font-bold text-lg mb-1 truncate">{pack.title}</h3>
+                          <p className="text-sm text-gray-400 mb-2">by {pack.creator_name}</p>
+                          <div className="flex items-center gap-2">
+                            {pack.sync_type && <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs font-bold">{pack.sync_type}</span>}
+                            {pack.bpm && <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.bpm} BPM</span>}
+                            {pack.key && <span className="px-2 py-1 bg-white/10 rounded text-xs">{pack.key}</span>}
+                            {pack.is_free ? (
+                              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-bold">FREE</span>
+                            ) : (
+                              <span className="px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-bold">${pack.price}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="glass-panel p-8 text-center">
+                  <p className="text-gray-400">No sync-ready packs yet</p>
+                </div>
+              )}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       {/* CTA Section */}
       <div className="py-24 px-4">
         <div className="container mx-auto max-w-4xl text-center">
