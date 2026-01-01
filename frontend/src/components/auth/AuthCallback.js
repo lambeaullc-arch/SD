@@ -25,7 +25,12 @@ const AuthCallback = () => {
         const response = await authAPI.createSession(sessionId);
         const user = response.data;
 
-        navigate('/browse', { state: { user }, replace: true });
+        // Redirect admin users to admin dashboard
+        if (user.role === 'admin') {
+          navigate('/admin-dashboard', { replace: true });
+        } else {
+          navigate('/browse', { state: { user }, replace: true });
+        }
       } catch (error) {
         console.error('Auth error:', error);
         navigate('/login');
