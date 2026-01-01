@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
 const WaveformPlayer = ({ audioUrl, packTitle }) => {
@@ -7,6 +7,12 @@ const WaveformPlayer = ({ audioUrl, packTitle }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState('0:00');
   const [currentTime, setCurrentTime] = useState('0:00');
+
+  const formatTime = useCallback((seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }, []);
 
   useEffect(() => {
     if (waveformRef.current) {
@@ -44,13 +50,7 @@ const WaveformPlayer = ({ audioUrl, packTitle }) => {
         wavesurfer.current.destroy();
       }
     };
-  }, [audioUrl]);
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, [audioUrl, formatTime]);
 
   const togglePlay = () => {
     if (wavesurfer.current) {
