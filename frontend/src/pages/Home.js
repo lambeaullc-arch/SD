@@ -103,21 +103,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* For Creators Section */}
-      <div className="py-24 px-4 bg-gradient-to-br from-violet-600/10 to-purple-600/5">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ fontFamily: 'Unbounded, sans-serif' }}>
-            For Creators
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Share your sounds with thousands of producers and earn 90% revenue on every sale
-          </p>
-          <Link to="/login" className="btn-primary text-lg px-8 py-4 inline-block">
-            Become a Creator
-          </Link>
-        </div>
-      </div>
-
       {/* CTA Section */}
       <div className="py-24 px-4">
         <div className="container mx-auto max-w-4xl text-center">
