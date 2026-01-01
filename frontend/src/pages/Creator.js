@@ -256,7 +256,7 @@ const Creator = () => {
               <select
                 value={uploadForm.category}
                 onChange={(e) => setUploadForm({ ...uploadForm, category: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:border-violet-500"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-4 text-white focus:outline-none focus:border-violet-500 [&>option]:bg-gray-900 [&>option]:text-white"
                 data-testid="upload-category-select"
               >
                 <option value="Drums">Drums</option>
@@ -328,7 +328,7 @@ const Creator = () => {
                   <select
                     value={uploadForm.syncType}
                     onChange={(e) => setUploadForm({ ...uploadForm, syncType: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet-500"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-violet-500 [&>option]:bg-gray-900 [&>option]:text-white"
                     data-testid="upload-sync-type-select"
                   >
                     <option value="">Select Sync Type</option>

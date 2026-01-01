@@ -246,7 +246,7 @@ const Admin = () => {
                   <select
                     value={uploadForm.category}
                     onChange={(e) => setUploadForm({ ...uploadForm, category: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:border-violet-500"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-4 text-white focus:outline-none focus:border-violet-500 [&>option]:bg-gray-900 [&>option]:text-white"
                     data-testid="admin-upload-category"
                   >
                     <option value="Drums">Drums</option>

@@ -656,7 +656,7 @@ const AdminDashboard = () => {
                         <select
                           value={editingPack.category}
                           onChange={(e) => setEditingPack({...editingPack, category: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white [&>option]:bg-gray-900 [&>option]:text-white"
                         >
                           <option value="Drums">Drums</option>
                           <option value="Bass">Bass</option>
@@ -723,7 +723,7 @@ const AdminDashboard = () => {
                           <select
                             value={editingPack.sync_type || ''}
                             onChange={(e) => setEditingPack({...editingPack, sync_type: e.target.value})}
-                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2"
+                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white [&>option]:bg-gray-900 [&>option]:text-white"
                           >
                             <option value="">Select Type</option>
                             <option value="Sports">Sports</option>
@@ -1178,7 +1178,7 @@ const AdminDashboard = () => {
                     <select
                       value={uploadForm.category}
                       onChange={(e) => setUploadForm({ ...uploadForm, category: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet-500"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-violet-500 [&>option]:bg-gray-900 [&>option]:text-white"
                       data-testid="upload-category"
                     >
                       <option value="Drums">Drums</option>
@@ -1282,7 +1282,7 @@ const AdminDashboard = () => {
                       <select
                         value={uploadForm.syncType}
                         onChange={(e) => setUploadForm({ ...uploadForm, syncType: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet-500"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-violet-500 [&>option]:bg-gray-900 [&>option]:text-white"
                         data-testid="upload-sync-type"
                       >
                         <option value="">Select Type</option>
