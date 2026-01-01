@@ -344,6 +344,9 @@ async def list_samples(
     search: Optional[str] = None,
     creator_id: Optional[str] = None,
     free_only: bool = False,
+    featured_only: bool = False,
+    sync_ready_only: bool = False,
+    sync_type: Optional[str] = None,
     skip: int = 0,
     limit: int = 50
 ):
@@ -356,6 +359,12 @@ async def list_samples(
         query["creator_id"] = creator_id
     if free_only:
         query["is_free"] = True
+    if featured_only:
+        query["is_featured"] = True
+    if sync_ready_only:
+        query["is_sync_ready"] = True
+    if sync_type:
+        query["sync_type"] = sync_type
     if search:
         query["$or"] = [
             {"title": {"$regex": search, "$options": "i"}},
