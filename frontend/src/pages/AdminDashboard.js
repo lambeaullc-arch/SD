@@ -452,6 +452,7 @@ const AdminDashboard = () => {
                       <th className="text-left py-3 px-4 text-gray-400 font-semibold">Name</th>
                       <th className="text-left py-3 px-4 text-gray-400 font-semibold">Role</th>
                       <th className="text-left py-3 px-4 text-gray-400 font-semibold">Joined</th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-semibold">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -470,6 +471,23 @@ const AdminDashboard = () => {
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-400">
                           {new Date(user.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="py-3 px-4">
+                          {user.role === 'user' && (
+                            <button
+                              onClick={() => handlePromoteToCreator(user.user_id, user.name)}
+                              className="px-3 py-1 bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 rounded text-xs font-semibold transition"
+                              data-testid="promote-creator-btn"
+                            >
+                              ⬆️ Make Creator
+                            </button>
+                          )}
+                          {user.role === 'creator' && (
+                            <span className="text-xs text-gray-500">Creator</span>
+                          )}
+                          {user.role === 'admin' && (
+                            <span className="text-xs text-gray-500">Admin</span>
+                          )}
                         </td>
                       </tr>
                     ))}
