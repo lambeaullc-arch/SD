@@ -443,6 +443,53 @@ async def get_sample_audio(pack_id: str):
         headers={"Accept-Ranges": "bytes"}
     )
 
+@api_router.get("/samples/{pack_id}/cover")
+async def get_sample_cover(pack_id: str):
+    """Serve cover image"""
+    pack = await db.sample_packs.find_one({"pack_id": pack_id}, {"_id": 0})
+    if not pack:
+        raise HTTPException(status_code=404, detail="Sample pack not found")
+    
+    cover_path = pack.get("cover_image_path")
+    if not cover_path:
+        raise HTTPException(status_code=404, detail="Cover image not found")
+    
+    file_path = ROOT_DIR / cover_path
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Cover image file not found")
+    
+    # Determine media type
+    ext = cover_path.split(".")[-1].lower()
+    media_types = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "gif": "image/gif", "webp": "image/webp"}
+    media_type = media_types.get(ext, "image/jpeg")
+    
+    return FileResponse(path=file_path, media_type=media_type)
+
+@api_router.get("/samples/{pack_id}/preview")
+async def get_sample_preview(pack_id: str):
+    """Serve preview audio file"""
+    pack = await db.sample_packs.find_one({"pack_id": pack_id}, {"_id": 0})
+    if not pack:
+        raise HTTPException(status_code=404, detail="Sample pack not found")
+    
+    preview_path = pack.get("preview_audio_path")
+    if not preview_path:
+        # Fall back to main audio file for non-zip files
+        if pack.get("file_type") != "zip":
+            preview_path = pack.get("audio_file_path")
+        if not preview_path:
+            raise HTTPException(status_code=404, detail="Preview audio not found")
+    
+    file_path = ROOT_DIR / preview_path
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Preview audio file not found")
+    
+    return FileResponse(
+        path=file_path,
+        media_type="audio/mpeg",
+        headers={"Accept-Ranges": "bytes"}
+    )
+
 @api_router.get("/samples/{pack_id}/download")
 async def download_sample(
     pack_id: str,
