@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Subscribe from './pages/Subscribe';
 import Browse from './pages/Browse';
+import Sync from './pages/Sync';
 import Favorites from './pages/Favorites';
 import Collections from './pages/Collections';
 import Creator from './pages/Creator';
@@ -30,6 +31,7 @@ function AppRouter() {
       <Route path="/subscribe" element={<Subscribe />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/browse" element={<Browse />} />
+      <Route path="/sync" element={<Sync />} />
       
       <Route 
         path="/favorites" 
