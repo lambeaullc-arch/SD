@@ -750,38 +750,49 @@ const AdminDashboard = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {allSamples.map(pack => (
-                  <div key={pack.pack_id} className="glass-panel p-6" data-testid="content-pack">
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold mb-1">{pack.title}</h3>
-                        <p className="text-sm text-gray-400">by {pack.creator_name}</p>
-                      </div>
-                      <div className="flex gap-1 flex-wrap justify-end">
+                  <div key={pack.pack_id} className="glass-panel p-4 overflow-hidden" data-testid="content-pack">
+                    {/* Cover Image */}
+                    <div className="relative aspect-square rounded-lg overflow-hidden mb-4">
+                      <img 
+                        src={pack.cover_image_path ? `${BACKEND_URL}/api/samples/${pack.pack_id}/cover` : 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop'}
+                        alt={pack.title}
+                        className="w-full h-full object-cover"
+                      />
+                      {/* Badges */}
+                      <div className="absolute top-2 left-2 flex flex-wrap gap-1">
                         {pack.is_free && (
-                          <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-semibold">
+                          <span className="px-2 py-1 bg-green-500/90 text-white rounded text-xs font-semibold">
                             FREE
                           </span>
                         )}
                         {pack.is_featured && (
-                          <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">
+                          <span className="px-2 py-1 bg-yellow-500/90 text-black rounded text-xs font-semibold">
                             FEATURED
                           </span>
                         )}
                         {pack.is_sync_ready && (
-                          <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">
+                          <span className="px-2 py-1 bg-blue-500/90 text-white rounded text-xs font-semibold">
                             SYNC
                           </span>
                         )}
                       </div>
                     </div>
                     
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold mb-1 line-clamp-1">{pack.title}</h3>
+                        <p className="text-sm text-gray-400">by {pack.creator_name}</p>
+                      </div>
+                      <span className="text-lg font-bold ml-2">
+                        {pack.is_free ? 'Free' : `$${pack.price}`}
+                      </span>
+                    </div>
+                    
                     <p className="text-sm text-gray-400 mb-3 line-clamp-2">{pack.description}</p>
                     
                     <div className="flex items-center justify-between mb-3">
                       <span className="px-3 py-1 bg-violet-500/20 rounded text-sm">{pack.category}</span>
-                      <span className="text-lg font-bold">
-                        {pack.is_free ? 'Free' : `$${pack.price}`}
-                      </span>
+                      <span className="text-xs text-gray-500">{(pack.file_size / 1024 / 1024).toFixed(1)} MB</span>
                     </div>
 
                     {(pack.bpm || pack.key) && (
@@ -791,12 +802,18 @@ const AdminDashboard = () => {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                      <span>📥 {pack.download_count} downloads</span>
-                      <span>{(pack.file_size / 1024 / 1024).toFixed(1)} MB</span>
+                    <div className="text-xs text-gray-500 mb-4">
+                      📥 {pack.download_count} downloads
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
+                      <Link
+                        to={`/pack/${pack.pack_id}`}
+                        className="btn-primary text-sm text-center"
+                        data-testid="view-pack-btn"
+                      >
+                        👁️ View
+                      </Link>
                       <button
                         onClick={() => handleEditPack(pack)}
                         className="btn-secondary text-sm"
@@ -820,7 +837,7 @@ const AdminDashboard = () => {
                       </button>
                       <button
                         onClick={() => handleDeletePack(pack.pack_id, pack.title)}
-                        className="text-sm rounded-lg py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                        className="col-span-2 text-sm rounded-lg py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30"
                         data-testid="delete-pack-btn"
                       >
                         🗑️ Delete
