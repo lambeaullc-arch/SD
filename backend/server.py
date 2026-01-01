@@ -263,17 +263,32 @@ async def create_session(request: Request, response: Response):
         # Create new user
         # Check if this is admin email
         is_admin = data["email"].lower() == ADMIN_EMAIL.lower()
+        
+        # Check if user was invited as creator
+        invitation = await db.creator_invitations.find_one(
+            {"email": data["email"].lower(), "status": "pending"},
+            {"_id": 0}
+        )
+        is_invited_creator = invitation is not None
+        
         user_doc = {
             "user_id": user_id,
             "email": data["email"],
             "name": data["name"],
             "picture": data.get("picture"),
-            "role": "admin" if is_admin else "user",
-            "creator_approved": False,
+            "role": "admin" if is_admin else ("creator" if is_invited_creator else "user"),
+            "creator_approved": is_invited_creator,  # Auto-approve invited creators
             "payout_frequency": "monthly",
             "created_at": datetime.now(timezone.utc)
         }
         await db.users.insert_one(user_doc)
+        
+        # Mark invitation as accepted
+        if is_invited_creator:
+            await db.creator_invitations.update_one(
+                {"email": data["email"].lower()},
+                {"$set": {"status": "accepted", "accepted_at": datetime.now(timezone.utc)}}
+            )
     
     # Create session
     session_token = data["session_token"]
