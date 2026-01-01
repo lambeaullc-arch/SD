@@ -1097,6 +1097,8 @@ async def admin_upload_pack(
     is_sync_ready: bool = Form(False),
     sync_type: Optional[str] = Form(None),
     audio_file: UploadFile = File(...),
+    cover_image: UploadFile = File(...),
+    preview_audio: Optional[UploadFile] = File(None),
     request: Request = None,
     session_token: Optional[str] = Cookie(None)
 ):
@@ -1138,6 +1140,26 @@ async def admin_upload_pack(
         file_size = os.path.getsize(audio_path)
         file_path = f"audio_files/{audio_filename}"
     
+    # Save cover image (required)
+    cover_ext = cover_image.filename.split(".")[-1].lower()
+    cover_filename = f"{pack_id}.{cover_ext}"
+    cover_path = COVERS_STORAGE_PATH / cover_filename
+    with open(cover_path, "wb") as f:
+        shutil.copyfileobj(cover_image.file, f)
+    
+    # Save preview audio (optional, but required for ZIP files)
+    preview_path = None
+    if preview_audio and preview_audio.filename:
+        preview_ext = preview_audio.filename.split(".")[-1].lower()
+        preview_filename = f"{pack_id}_preview.{preview_ext}"
+        preview_file_path = PREVIEWS_STORAGE_PATH / preview_filename
+        with open(preview_file_path, "wb") as f:
+            shutil.copyfileobj(preview_audio.file, f)
+        preview_path = f"previews/{preview_filename}"
+    elif file_extension != "zip":
+        # For single audio files, use the main file as preview
+        preview_path = file_path
+    
     # Parse tags
     tags_list = [t.strip() for t in tags.split(",") if t.strip()]
     
@@ -1158,6 +1180,8 @@ async def admin_upload_pack(
         "creator_id": creator["user_id"],
         "creator_name": creator["name"],
         "audio_file_path": file_path,
+        "cover_image_path": f"covers/{cover_filename}",
+        "preview_audio_path": preview_path,
         "file_type": "zip" if file_extension == "zip" else "audio",
         "duration": 0.0,
         "file_size": file_size,
