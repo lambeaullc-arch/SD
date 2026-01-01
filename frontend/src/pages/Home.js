@@ -1,16 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { samplesAPI } from '../utils/api';
 
 const Home = () => {
   const [featuredPacks, setFeaturedPacks] = useState([]);
   const [syncPacks, setSyncPacks] = useState([]);
 
-  useEffect(() => {
-    fetchFeatured();
-  }, []);
-
-  const fetchFeatured = async () => {
+  const fetchFeatured = useCallback(async () => {
     try {
       const [featuredRes, syncRes] = await Promise.all([
         samplesAPI.list({ featured_only: true, limit: 3 }),
@@ -21,7 +17,11 @@ const Home = () => {
     } catch (error) {
       console.error('Failed to fetch featured content:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchFeatured();
+  }, [fetchFeatured]);
 
   return (
     <div className="min-h-screen">
