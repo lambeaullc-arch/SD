@@ -136,6 +136,27 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleInviteCreator = async (e) => {
+    e.preventDefault();
+    
+    if (!inviteEmail) {
+      alert('Please enter an email address');
+      return;
+    }
+    
+    try {
+      const formData = new FormData();
+      formData.append('email', inviteEmail);
+      
+      await adminAPI.inviteCreator(formData);
+      alert(`Creator invitation sent to ${inviteEmail}!`);
+      setInviteEmail('');
+      fetchAllData();
+    } catch (error) {
+      alert('Failed to send invitation: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await authAPI.logout();
