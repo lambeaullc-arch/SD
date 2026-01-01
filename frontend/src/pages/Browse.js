@@ -57,6 +57,11 @@ const Browse = () => {
   };
 
   const handlePurchase = async (packId) => {
+    if (!user) {
+      alert('Please sign in to purchase');
+      window.location.href = '/login';
+      return;
+    }
     try {
       const response = await purchaseAPI.createCheckout(packId, window.location.origin);
       window.location.href = response.data.url;
@@ -66,6 +71,11 @@ const Browse = () => {
   };
 
   const handleSubscribe = async () => {
+    if (!user) {
+      alert('Please sign in to subscribe');
+      window.location.href = '/login';
+      return;
+    }
     try {
       const response = await subscriptionAPI.createCheckout(window.location.origin);
       window.location.href = response.data.url;
@@ -75,6 +85,11 @@ const Browse = () => {
   };
 
   const handleAddFavorite = async (packId) => {
+    if (!user) {
+      alert('Please sign in to add favorites');
+      window.location.href = '/login';
+      return;
+    }
     try {
       await favoritesAPI.add(packId);
       alert('Added to favorites!');
@@ -84,6 +99,11 @@ const Browse = () => {
   };
 
   const handleDownload = async (packId, title) => {
+    if (!user) {
+      alert('Please sign in to download');
+      window.location.href = '/login';
+      return;
+    }
     try {
       const response = await samplesAPI.download(packId);
       const url = window.URL.createObjectURL(new Blob([response.data]));
