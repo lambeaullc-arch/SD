@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { samplesAPI } from '../utils/api';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
   const [featuredPacks, setFeaturedPacks] = useState([]);
   const [syncPacks, setSyncPacks] = useState([]);
+  const [playingPack, setPlayingPack] = useState(null);
+  const audioRef = useRef(null);
 
   const fetchFeatured = useCallback(async () => {
     try {
@@ -22,6 +26,39 @@ const Home = () => {
   useEffect(() => {
     fetchFeatured();
   }, [fetchFeatured]);
+
+  const togglePlay = (packId, previewUrl) => {
+    if (playingPack === packId) {
+      // Stop playing
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setPlayingPack(null);
+    } else {
+      // Start playing new track
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      audioRef.current = new Audio(previewUrl);
+      audioRef.current.play();
+      audioRef.current.onended = () => setPlayingPack(null);
+      setPlayingPack(packId);
+    }
+  };
+
+  const getPreviewUrl = (pack) => {
+    if (pack.preview_audio_path || pack.file_type !== 'zip') {
+      return `${BACKEND_URL}/api/samples/${pack.pack_id}/preview`;
+    }
+    return null;
+  };
+
+  const getCoverUrl = (pack) => {
+    if (pack.cover_image_path) {
+      return `${BACKEND_URL}/api/samples/${pack.pack_id}/cover`;
+    }
+    return null;
+  };
 
   return (
     <div className="min-h-screen">
