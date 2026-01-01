@@ -1045,6 +1045,72 @@ async def mark_pack_free(
     
     return {"message": f"Pack marked as {'free' if is_free else 'paid'}"}
 
+@api_router.post("/admin/packs/{pack_id}/mark-featured")
+async def mark_pack_featured(
+    pack_id: str,
+    is_featured: bool = Form(...),
+    request: Request = None,
+    session_token: Optional[str] = Cookie(None)
+):
+    """Mark pack as featured"""
+    admin = await require_role(request, "admin", session_token)
+    
+    await db.sample_packs.update_one(
+        {"pack_id": pack_id},
+        {"$set": {"is_featured": is_featured}}
+    )
+    
+    return {"message": f"Pack marked as {'featured' if is_featured else 'not featured'}"}
+
+@api_router.post("/admin/packs/{pack_id}/mark-sync-ready")
+async def mark_pack_sync_ready(
+    pack_id: str,
+    is_sync_ready: bool = Form(...),
+    sync_type: Optional[str] = Form(None),
+    request: Request = None,
+    session_token: Optional[str] = Cookie(None)
+):
+    """Mark pack as sync-ready with type"""
+    admin = await require_role(request, "admin", session_token)
+    
+    update_data = {"is_sync_ready": is_sync_ready}
+    if is_sync_ready and sync_type:
+        update_data["sync_type"] = sync_type
+    elif not is_sync_ready:
+        update_data["sync_type"] = None
+    
+    await db.sample_packs.update_one(
+        {"pack_id": pack_id},
+        {"$set": update_data}
+    )
+    
+    return {"message": f"Pack marked as {'sync-ready' if is_sync_ready else 'not sync-ready'}"}
+
+@api_router.post("/admin/packs/{pack_id}/update-metadata")
+async def update_pack_metadata(
+    pack_id: str,
+    bpm: Optional[int] = Form(None),
+    key: Optional[str] = Form(None),
+    request: Request = None,
+    session_token: Optional[str] = Cookie(None)
+):
+    """Update pack BPM and Key"""
+    admin = await require_role(request, "admin", session_token)
+    
+    update_data = {}
+    if bpm is not None:
+        update_data["bpm"] = bpm
+    if key is not None:
+        update_data["key"] = key
+    
+    if update_data:
+        await db.sample_packs.update_one(
+            {"pack_id": pack_id},
+            {"$set": update_data}
+        )
+    
+    return {"message": "Pack metadata updated"}
+
 @api_router.get("/admin/stats")
 async def get_admin_stats(request: Request, session_token: Optional[str] = Cookie(None)):
     """Get platform statistics"""
