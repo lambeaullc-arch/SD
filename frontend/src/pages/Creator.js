@@ -41,16 +41,6 @@ const Creator = () => {
     }
   };
 
-  const handleApply = async () => {
-    try {
-      await creatorAPI.apply();
-      alert('Application submitted! Awaiting admin approval.');
-      fetchData();
-    } catch (error) {
-      alert('Failed to apply: ' + (error.response?.data?.detail || error.message));
-    }
-  };
-
   const handleUpload = async (e) => {
     e.preventDefault();
     try {
