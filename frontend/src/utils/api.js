@@ -64,5 +64,7 @@ export const adminAPI = {
   uploadPack: (formData) => api.post('/admin/packs', formData),
   markFree: (packId, formData) => api.post(`/admin/packs/${packId}/mark-free`, formData),
   getStats: () => api.get('/admin/stats'),
-  getAllUsers: () => api.get('/admin/users')
+  getAllUsers: () => api.get('/admin/users'),
+  inviteCreator: (formData) => api.post('/admin/invite-creator', formData),
+  listInvitations: () => api.get('/admin/invitations')
 };
